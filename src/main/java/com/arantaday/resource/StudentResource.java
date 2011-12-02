@@ -33,7 +33,7 @@ public class StudentResource {
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
   // We'll just 'persist' data in memory for this test application
-  private static final Map<Integer, Student> STUDENTS = Maps.newHashMap();
+  private static final Map<Integer, Student> STUDENTS = Maps.newConcurrentMap();
 
   @GET
   public Collection<Integer> listStudentIds() {
