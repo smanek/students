@@ -1,0 +1,30 @@
+A small RESTful Java Web Service, described on http://arantaday.com/the-modern-java-ecosystem.
+
+To run it, you can just clone this repo and then run 'mvn tomcat:run' in the directory.
+
+Some example interaction (via CURL):
+# List the existing students (there are none)
+~$ curl http://127.0.0.1:8080/student/rest/students
+[]
+
+# Create some fake students, and check that they now present
+~$ curl -d "name=Shaneal&dob=015-28-1986&courses=CS-301,CS-401,CS-501" http://127.0.0.1:8080/student/rest/students
+1
+~$ curl -d "name=John&dob=01-02-1984&courses=CS-101,ENG-201,MATH-304" http://127.0.0.1:8080/student/rest/students
+2
+~$ curl http://127.0.0.1:8080/student/rest/students
+[1,2]
+~$ curl http://127.0.0.1:8080/student/rest/students/2
+{"uid":2,"name":"John","dateOfBirth":441878400000,"enrolled":true,"courses":["CS-101","ENG-201","MATH-304"]}
+~$ curl http://127.0.0.1:8080/student/rest/students/1
+{"uid":1,"name":"Shaneal","dateOfBirth":543916800000,"enrolled":true,"courses":["CS-301","CS-401","CS-501"]}
+
+# Delete one of the students, and verify that it is deleted
+~$ curl -X DELETE http://127.0.0.1:8080/student/rest/students/1
+true
+~$ curl http://127.0.0.1:8080/student/rest/students
+[2]
+~$ curl http://127.0.0.1:8080/student/rest/students/2
+{"uid":2,"name":"John","dateOfBirth":441878400000,"enrolled":true,"courses":["CS-101","ENG-201","MATH-304"]}
+~$ curl -s -w "%{http_code}\\n" http://127.0.0.1:8080/student/rest/students/1 -o /dev/null
+404
